@@ -1,5 +1,6 @@
 ###2019.11.23
-####1.连接数据库时出现错误：
+
+####1、连接数据库时出现错误：
 ```text
 There was an unexpected error (type=Internal Server Error, status=500).
 nested exception is org.apache.ibatis.exceptions.PersistenceException: 
