@@ -1,5 +1,6 @@
 package life.east.community.service;
 
+import life.east.community.dto.PaginationDTO;
 import life.east.community.dto.QuestionDTO;
 import life.east.community.mapper.QuestionMapper;
 import life.east.community.mapper.UserMapper;
@@ -26,10 +27,28 @@ public class QuestionService {
     @Autowired
     private QuestionMapper questionMapper;
 
-    public List<QuestionDTO> listQuestions() {
-        List<QuestionDTO> questionDTOList = new ArrayList<>();
-        List<Question> questionList = questionMapper.listQuestions();
+    public PaginationDTO listQuestions(Integer pageNumber, Integer pageSize) {
 
+        //size*(page-1)
+        Integer totalCount = questionMapper.count();
+        Integer totalPage;
+        if (totalCount % pageSize == 0) {
+            totalPage = totalCount / pageSize;
+        } else {
+            totalPage = totalCount / pageSize + 1;
+        }
+
+        if(pageNumber < 1){
+            pageNumber = 1;
+        }
+        if(pageNumber > totalPage){
+            pageNumber = totalPage;
+        }
+        Integer offset = pageSize * ((pageNumber - 1) >= 0 ? (pageNumber - 1): 0);
+        List<Question> questionList = questionMapper.listQuestions(offset,pageSize);
+
+        List<QuestionDTO> questionDTOList = new ArrayList<>();
+        PaginationDTO paginationDTO = new PaginationDTO();
         for (Question question : questionList){
             User user = userMapper.findById(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
@@ -38,6 +57,11 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
-        return questionDTOList;
+        paginationDTO.setQuestions(questionDTOList);
+        //获取总记录数
+//        Integer totalCount = questionMapper.count();
+        //根据分页大小等得到分页的相关信息
+        paginationDTO.setPagination(totalPage,pageNumber,pageSize);
+        return paginationDTO;
     }
 }

@@ -13,5 +13,6 @@ public class GithubUserDTO {
     private String name;
     private Long id;
     private String bio;
-    private String avatar_url;
+    //fastjson与驼峰命名规则兼容
+    private String avatarUrl;
 }

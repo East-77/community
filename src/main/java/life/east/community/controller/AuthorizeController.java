@@ -62,7 +62,7 @@ public class AuthorizeController {
             user.setName(githubUser.getName());
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
-            user.setAvatarUrl(githubUser.getAvatar_url());
+            user.setAvatarUrl(githubUser.getAvatarUrl());
             userMapper.insertUser(user);
 //            //登录成功，写cookie和session
 //            request.getSession().setAttribute("user",githubUser);
