@@ -26,9 +26,9 @@ public class IndexController {
         for(Cookie cookie : cookies){
             if(cookie.getName().equals("token")){
                 String token = cookie.getValue();
-                User uesr = userMapper.findByToken(token);
-                if(uesr != null){
-                    request.getSession().setAttribute("user",uesr);
+                User user = userMapper.findByToken(token);
+                if(user != null){
+                    request.getSession().setAttribute("user",user);
                 }
                 break;
             }
