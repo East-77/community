@@ -20,3 +20,9 @@ MySQL驱动（Driver）版本问题：8.*与5.*不兼容。
       <version>5.*.*</version>
     </dependency>
 ```
+
+###2019.11.23
+
+####Flyway:
+  Version control for your database.数据库版本管理工具。方便多人协作时管理数据库版本一致问题。
+  官网：https://flywaydb.org/
