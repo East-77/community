@@ -1,14 +1,15 @@
-package life.east.community.model;
+package life.east.community.dto;
 
+import life.east.community.model.User;
 import lombok.Data;
 
 /**
  * @author 7777777
  * @date 2019/11/24 13:21:36
- * @description
+ * @description DTO为传输层模型
  */
 @Data
-public class Question {
+public class QuestionDTO {
 
     private Integer id;
     private String title;
@@ -20,4 +21,5 @@ public class Question {
     private Integer viewCount;
     private Integer likeCount;
     private Integer creator;
+    private User user;
 }

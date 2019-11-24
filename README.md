@@ -27,3 +27,14 @@ MySQL驱动（Driver）版本问题：8.*与5.*不兼容。
   Version control for your database.数据库版本管理工具。方便多人协作时管理数据库版本一致问题。
   官网：https://flywaydb.org/
   
+  ####错误1：
+  ```text
+java.lang.NoSuchMethodError: 
+        life.east.community.dto.GithubUserDTO$$M$_jr_6F1DE4C7E0EF58A8_2.getAvat
+```
+ #####原因：
+ 
+   修改实体类属性时，“编译器没反应过来”
+ 
+ #####解决：
+   重新编写相关调用代码。
