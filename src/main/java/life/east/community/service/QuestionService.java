@@ -61,7 +61,43 @@ public class QuestionService {
         //获取总记录数
 //        Integer totalCount = questionMapper.count();
         //根据分页大小等得到分页的相关信息
-        paginationDTO.setPagination(totalPage,pageNumber,pageSize);
+        paginationDTO.setPagination(totalPage,pageNumber);
+        return paginationDTO;
+    }
+
+    public PaginationDTO listQuestions(Integer userId, Integer pageNumber, Integer pageSize) {
+        Integer totalCountOfCreator = questionMapper.countOfCreator(userId);
+        Integer totalPage;
+        if (totalCountOfCreator % pageSize == 0) {
+            totalPage = totalCountOfCreator / pageSize;
+        } else {
+            totalPage = totalCountOfCreator / pageSize + 1;
+        }
+
+        if(pageNumber < 1){
+            pageNumber = 1;
+        }
+        if(pageNumber > totalPage){
+            pageNumber = totalPage;
+        }
+        Integer offset = pageSize * ((pageNumber - 1) >= 0 ? (pageNumber - 1): 0);
+        List<Question> questionList = questionMapper.listQuestionsByCreator(userId,offset,pageSize);
+
+        List<QuestionDTO> questionDTOList = new ArrayList<>();
+        PaginationDTO paginationDTO = new PaginationDTO();
+        for (Question question : questionList){
+            User user = userMapper.findById(question.getCreator());
+            QuestionDTO questionDTO = new QuestionDTO();
+            //通过BeanUtils快速注入questionDTO中与question相同的属性
+            BeanUtils.copyProperties(question,questionDTO);
+            questionDTO.setUser(user);
+            questionDTOList.add(questionDTO);
+        }
+        paginationDTO.setQuestions(questionDTOList);
+        //获取总记录数
+//        Integer totalCount = questionMapper.count();
+        //根据分页大小等得到分页的相关信息
+        paginationDTO.setPagination(totalPage,pageNumber);
         return paginationDTO;
     }
 }

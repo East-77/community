@@ -2,27 +2,25 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" th:href="@{/asserts/css/community.css}">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css"
           integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-    <script src="" th:src="@{/asserts/js/jquery-3.4.1.min.js}"></script>
+    <!-- 引入不了 -->
+    <!--    <link rel="stylesheet" href="../static/asserts/css/community.css" th:src="@{/asserts/css/community.css}">-->
+    <script src="../static/asserts/js/jquery-3.4.1.min.js" th:src="@{/asserts/js/jquery-3.4.1.min.js}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
-    <title>East's 社区</title>
+    <title th:text="${sectionName}">East's 社区</title>
 </head>
 <body style="background-color: #efefef">
 <div th:replace="~{commons/navigation::nav}"></div>
 <div class="container-fluid main" style="background-color: white;margin: 30px">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
-            <h2>
-                <span class="glyphicon glyphicon-list" aria-hidden="true"></span> 发现
-                <!--                <span th:if="${error} != null" class="alert alert-danger" style="text-align:center;float: right"-->
-                <!--                      th:text="${error}"></span>-->
-            </h2>
+            <h2><span th:text="${sectionName}"></span></h2>
             <hr/>
             <div class="media" th:each="question : ${pagination.questions}">
                 <div class="media-left">
@@ -33,7 +31,6 @@
                 </div>
                 <div class="media-body">
                     <h4 class="media-heading" th:text="${question.getTitle()}"></h4>
-                    <span th:text="${question.description}"></span><br/>
                     <div class="text-desc" style="font-size: 12px;font-weight: normal;color: #999">
                         <span th:text="${question.getCommentCount()}"></span> 个回复 •
                         <span th:text="${question.getViewCount()}"></span> 次浏览 •
@@ -44,26 +41,26 @@
             <nav aria-label="Page navigation">
                 <ul class="pagination">
                     <li th:if="${pagination.showFirstPage}">
-                        <a th:href="@{/(pageNumber=1)}" aria-label="First">
+                        <a th:href="@{'/profile/'+${section}(pageNumber=1)}" aria-label="First">
                             <span aria-hidden="true">&lt;&lt;</span>
                         </a>
                     </li>
                     <li th:if="${pagination.showPrevious}">
-                        <a th:href="@{/(pageNumber=${pagination.currentPage}-1)}" aria-label="Previous">
+                        <a th:href="@{'/profile/'+${section}(pageNumber=${pagination.currentPage}-1)}" aria-label="Previous">
                             <span aria-hidden="true">&lt;</span>
                         </a>
                     </li>
                     <li th:each="pageNumber : ${pagination.pages}"
                         th:class="${pagination.currentPage==pageNumber}?'active':''">
-                        <a th:href="@{/(pageNumber=${pageNumber})}">[[${pageNumber}]]</a>
+                        <a th:href="@{'/profile/'+${section}(pageNumber=${pageNumber})}">[[${pageNumber}]]</a>
                     </li>
                     <li th:if="${pagination.showNext}">
-                        <a th:href="@{/(pageNumber=${pagination.currentPage}+1)}" aria-label="Next">
+                        <a th:href="@{'/profile/'+${section}(pageNumber=${pagination.currentPage}+1)}" aria-label="Next">
                             <span aria-hidden="true">&gt;</span>
                         </a>
                     </li>
                     <li th:if="${pagination.showEndPage}">
-                        <a th:href="@{/(pageNumber=${pagination.totalPage})}" aria-label="End">
+                        <a th:href="@{'/profile/'+${section}(pageNumber=${pagination.totalPage})}" aria-label="End">
                             <span aria-hidden="true">&gt;&gt;</span>
                         </a>
                     </li>
@@ -71,7 +68,14 @@
             </nav>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-            <h3>热门话题</h3>
+            <div class="list-group" style="margin-top: 15px">
+                <a href="/profile/questions"
+                   th:class="${section}=='questions'?'list-group-item active':'list-group-item'">我的问题</a>
+                <a href="/profile/replies" th:class="${section}=='replies'?'list-group-item active':'list-group-item'">
+                    最新回复
+                    <span class="badge">14</span>
+                </a>
+            </div>
         </div>
     </div>
 </div>

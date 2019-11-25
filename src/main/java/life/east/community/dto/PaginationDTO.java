@@ -22,7 +22,7 @@ public class PaginationDTO {
     private Integer totalPage;
     private List<Integer> pages = new ArrayList<>();//pages的这个初始化默认值new ArrayList<>()去掉会出现异常
 
-    public void setPagination(Integer totalPage, Integer pageNumber, Integer pageSize) {
+    public void setPagination(Integer totalPage, Integer pageNumber) {
         this.currentPage = pageNumber;
         this.totalPage = totalPage;
 //        Integer totalPage;
@@ -33,7 +33,6 @@ public class PaginationDTO {
 //        }
 
         //页码导航栏显示逻辑。最多显示七个页码
-        System.out.println(pageNumber);
         pages.add(pageNumber);
         for (int i = 1; i <= 3; i++) {
             if (pageNumber - i > 0) {
