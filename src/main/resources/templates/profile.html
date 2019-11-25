@@ -7,16 +7,15 @@
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css"
           integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-    <!-- 引入不了 -->
-    <!--    <link rel="stylesheet" href="../static/asserts/css/community.css" th:src="@{/asserts/css/community.css}">-->
-    <script src="../static/asserts/js/jquery-3.4.1.min.js" th:src="@{/asserts/js/jquery-3.4.1.min.js}"></script>
+    <link rel="stylesheet" th:src="@{asserts/css/community.css}">
+    <script th:src="@{asserts/js/jquery-3.4.1.min.js}" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
     <title th:text="${sectionName}">East's 社区</title>
 </head>
 <body style="background-color: #efefef">
-<div th:replace="~{commons/navigation::nav}"></div>
+<div th:insert="~{commons/navigation::nav}"></div>
 <div class="container-fluid main" style="background-color: white;margin: 30px">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
@@ -46,7 +45,8 @@
                         </a>
                     </li>
                     <li th:if="${pagination.showPrevious}">
-                        <a th:href="@{'/profile/'+${section}(pageNumber=${pagination.currentPage}-1)}" aria-label="Previous">
+                        <a th:href="@{'/profile/'+${section}(pageNumber=${pagination.currentPage}-1)}"
+                           aria-label="Previous">
                             <span aria-hidden="true">&lt;</span>
                         </a>
                     </li>
@@ -55,7 +55,8 @@
                         <a th:href="@{'/profile/'+${section}(pageNumber=${pageNumber})}">[[${pageNumber}]]</a>
                     </li>
                     <li th:if="${pagination.showNext}">
-                        <a th:href="@{'/profile/'+${section}(pageNumber=${pagination.currentPage}+1)}" aria-label="Next">
+                        <a th:href="@{'/profile/'+${section}(pageNumber=${pagination.currentPage}+1)}"
+                           aria-label="Next">
                             <span aria-hidden="true">&gt;</span>
                         </a>
                     </li>

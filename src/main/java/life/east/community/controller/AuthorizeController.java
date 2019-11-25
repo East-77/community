@@ -5,6 +5,7 @@ import life.east.community.dto.AccessTokenDTO;
 import life.east.community.dto.GithubUserDTO;
 import life.east.community.mapper.UserMapper;
 import life.east.community.model.User;
+import life.east.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -40,11 +41,14 @@ public class AuthorizeController {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
                            @RequestParam(name = "state") String state,
-                           HttpServletRequest request,
-                           HttpServletResponse response){
+                           HttpServletResponse response,
+                           HttpServletRequest request){
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setClient_id(clientId);
         accessTokenDTO.setClient_secret(clientSecret);
@@ -60,12 +64,11 @@ public class AuthorizeController {
             user.setToken(token);
             user.setAccountId(String.valueOf(githubUser.getId()));
             user.setName(githubUser.getName());
-            user.setGmtCreate(System.currentTimeMillis());
-            user.setGmtModified(user.getGmtCreate());
             user.setAvatarUrl(githubUser.getAvatarUrl());
-            userMapper.insertUser(user);
-//            //登录成功，写cookie和session
-//            request.getSession().setAttribute("user",githubUser);
+
+            userService.insertOrUpdate(user);
+            //写入session、cookie
+            request.getSession().setAttribute("user",user);
             //数据库模拟cokie
             response.addCookie(new Cookie("token",token));
             return "redirect:/";
@@ -74,5 +77,26 @@ public class AuthorizeController {
             //登录失败，重新登录
             return "redirect:/";
         }
+    }
+
+    /**
+     * 退出登录
+     * @return
+     */
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response){
+        //清楚session的user
+        request.getSession().removeAttribute("user");
+
+        //创建新的同名cookie，替换旧的token
+        Cookie cookie = new Cookie("token",null);
+        //立即删除型
+        cookie.setMaxAge(0);
+        //所有路径下均有效，确保删除
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
+        return "redirect:/";
     }
 }

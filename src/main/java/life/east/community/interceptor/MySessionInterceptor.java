@@ -26,7 +26,7 @@ public class MySessionInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         Cookie[] cookies = request.getCookies();
-        if (cookies != null && cookies.length > 0 ) {
+        if (cookies != null && cookies.length > 0) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("token")) {
                     String token = cookie.getValue();
@@ -38,6 +38,11 @@ public class MySessionInterceptor implements HandlerInterceptor {
                 }
             }
         }
+
+        //未登录用户只能发起浏览请求不能发起其他请求
+        request.setAttribute("error", "请先登录！");
+        //跳转到首页
+        request.getRequestDispatcher("/").forward(request, response);
         return false;
     }
 

@@ -13,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @description
  */
 @Configuration
-@EnableWebMvc
+//@EnableWebMvc
 public class MyWebConfig implements WebMvcConfigurer {
 
     @Autowired
@@ -21,6 +21,8 @@ public class MyWebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(mySessionInterceptor).addPathPatterns("/**").excludePathPatterns("/callback");
+        registry.addInterceptor(mySessionInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/","/index.html","/callback**");
     }
 }
