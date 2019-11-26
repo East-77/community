@@ -2,8 +2,11 @@ package life.east.community.service;
 
 import life.east.community.mapper.UserMapper;
 import life.east.community.model.User;
+import life.east.community.model.UserExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author 7777777
@@ -17,19 +20,32 @@ public class UserService {
     private UserMapper userMapper;
 
     public void insertOrUpdate(User user) {
-       User dbUser =  userMapper.findByAccountId(user.getAccountId());
-       if(dbUser == null){
-           //插入
-           user.setGmtCreate(System.currentTimeMillis());
-           user.setGmtModified(user.getGmtCreate());
-           userMapper.insertUser(user);
-       }else{
-           //更新
-           dbUser.setGmtModified(System.currentTimeMillis());
-           dbUser.setAvatarUrl(user.getAvatarUrl());
-           dbUser.setName(user.getName());
-           dbUser.setToken(user.getToken());
-           userMapper.updateUser(dbUser);
-       }
+
+        UserExample userExample = new UserExample();
+        userExample.createCriteria()
+                .andAccountIdEqualTo(user.getAccountId());
+        List<User> dbUsers = userMapper.selectByExample(userExample);
+        //User dbUser =  userMapper.findByAccountId(user.getAccountId());
+        if (dbUsers.size() == 0) {
+            //插入
+            user.setGmtCreate(System.currentTimeMillis());
+            user.setGmtModified(user.getGmtCreate());
+            userMapper.insert(user);
+        } else {
+            //更新
+            User updateUser = new User();
+            updateUser.setGmtModified(System.currentTimeMillis());
+            updateUser.setAvatarUrl(user.getAvatarUrl());
+            updateUser.setName(user.getName());
+            updateUser.setToken(user.getToken());
+
+            UserExample example = new UserExample();
+            example.createCriteria()
+                    .andIdEqualTo(dbUsers.get(0).getId());
+
+            //更新传入对象的非空字段
+            userMapper.updateByExampleSelective(updateUser,example);
+//            userMapper.updateUser(dbUser);
+        }
     }
 }

@@ -77,5 +77,17 @@ public void addInterceptors(InterceptorRegistry registry) {
 org.springframework.expression.spel.SpelEvaluationException: EL1011E: Method call: Attempted to call method getAvatarUrl() on null context object
 ```
 
-####分析：
+#####分析：
   错误调用定位到某html页面中的调用：${question.user.getAvatarUrl()}，此时user不存在。问题出在数据库数据混乱，检查并改正之前调试遗留的数据库数据有误问题。
+ 
+####Maven命令使用MyBatis Generator:
+```bash
+mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
+```
+
+###2019.11.26
+
+####`未解决的问题：`       
+   每次重启登录态消失
+   
+ #####原因：拦截器没有拦截主页，所以没有添加登录态

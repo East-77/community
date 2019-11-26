@@ -1,13 +1,16 @@
 package life.east.community.controller;
 
 import com.mysql.jdbc.StringUtils;
+import life.east.community.dto.QuestionDTO;
 import life.east.community.mapper.QuestionMapper;
 import life.east.community.model.Question;
 import life.east.community.model.User;
+import life.east.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -22,7 +25,18 @@ import javax.servlet.http.HttpServletRequest;
 public class PublishController {
 
     @Autowired
-    private QuestionMapper questionMapper;
+    private QuestionService questionService;
+
+    @GetMapping("/publish/{id}")
+    public String edit(@PathVariable(name = "id") Integer id,
+                       Model model){
+        QuestionDTO question = questionService.findById(id);
+        model.addAttribute("title", question.getTitle());
+        model.addAttribute("description", question.getDescription());
+        model.addAttribute("tag", question.getTag());
+        model.addAttribute("id", question.getId());
+        return "publish";
+    }
 
     /**
      * GET请求跳转页面
@@ -41,9 +55,10 @@ public class PublishController {
      */
     @PostMapping("/publish")
     public String doPublish(
-            @RequestParam(name = "title") String title,
-            @RequestParam(name = "description") String description,
-            @RequestParam(name = "tag") String tag,
+            @RequestParam(name = "title",required = false) String title,
+            @RequestParam(name = "description",required = false) String description,
+            @RequestParam(name = "tag",required = false) String tag,
+            @RequestParam(name = "id",required = false) Integer id,
             HttpServletRequest request,
             Model model) {
 
@@ -74,10 +89,10 @@ public class PublishController {
         question.setTitle(title);
         question.setDescription(description);
         question.setTag(tag);
-        question.setGmtCreate(System.currentTimeMillis());
-        question.setGmtModified(question.getGmtCreate());
         question.setCreator(user.getId());
-        questionMapper.createQuestion(question);
+        question.setId(id);
+
+        questionService.createOrUpdate(question);
 
         return "redirect:/";
     }

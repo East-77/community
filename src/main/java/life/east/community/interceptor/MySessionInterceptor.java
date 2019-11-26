@@ -2,6 +2,7 @@ package life.east.community.interceptor;
 
 import life.east.community.mapper.UserMapper;
 import life.east.community.model.User;
+import life.east.community.model.UserExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -10,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @author 7777777
@@ -30,9 +32,15 @@ public class MySessionInterceptor implements HandlerInterceptor {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("token")) {
                     String token = cookie.getValue();
-                    User user = userMapper.findByToken(token);
-                    if (user != null) {
-                        request.getSession().setAttribute("user", user);
+
+                    //利用mybatis generator 生成的配置，相当于自定义的findByToken()
+                    UserExample userExample = new UserExample();
+                    userExample.createCriteria()
+                            .andTokenEqualTo(token);
+                    //User user = userMapper.findByToken(token);
+                    List<User> users = userMapper.selectByExample(userExample);
+                    if (users.size() != 0) {
+                        request.getSession().setAttribute("user", users.get(0));
                         return true;
                     }
                 }
@@ -40,8 +48,9 @@ public class MySessionInterceptor implements HandlerInterceptor {
         }
 
         //未登录用户只能发起浏览请求不能发起其他请求
-        request.setAttribute("error", "请先登录！");
-        //跳转到首页
+//        request.setAttribute("error", "请先登录！");
+//        //跳转到首页
+//        System.out.println("跳转到首页");
         request.getRequestDispatcher("/").forward(request, response);
         return false;
     }

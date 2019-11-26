@@ -20,7 +20,7 @@ import java.util.UUID;
 /**
  * @author 7777777
  * @date 2019/11/23 14:29:03
- * @description 登录GitHub
+ * @description 登录GitHub/退出登录
  */
 @Controller
 public class AuthorizeController {
@@ -67,8 +67,10 @@ public class AuthorizeController {
             user.setAvatarUrl(githubUser.getAvatarUrl());
 
             userService.insertOrUpdate(user);
+
             //写入session、cookie
             request.getSession().setAttribute("user",user);
+            request.getSession().setAttribute("test","我没有消失");
             //数据库模拟cokie
             response.addCookie(new Cookie("token",token));
             return "redirect:/";

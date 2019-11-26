@@ -1,0 +1,6 @@
+mybatis:
+  type-aliases-package: life.east.community.mapper
+  mapper-locations: classpath:mapper/*.xml
+
+
+
