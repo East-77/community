@@ -7,7 +7,7 @@ import lombok.Data;
 /**
  * @author 7777777
  * @date 2019/11/26 22:42:20
- * @description
+ * @description 记录回复结果（成功或失败）
  */
 @Data
 public class CommentResultDTO {
@@ -32,7 +32,7 @@ public class CommentResultDTO {
 
     public static CommentResultDTO okOf(){
         CommentResultDTO commentResultDTO = new CommentResultDTO();
-        commentResultDTO.setCode(2000);
+        commentResultDTO.setCode(200);
         commentResultDTO.setMessage("请求成功");
         return commentResultDTO;
     }

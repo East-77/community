@@ -13,6 +13,15 @@
             crossorigin="anonymous"></script>
     <title>East's 社区</title>
 </head>
+<script type="application/javascript">
+    window.onload = function () {
+        var closable = window.localStorage.getItem("closable");
+        if (closable){
+            window.localStorage.removeItem("closable");
+            window.close();
+        }
+    }
+</script>
 <body style="background-color: #efefef">
 <div th:insert="~{commons/navigation::nav}"></div>
 <div class="container-fluid main" style="background-color: white;margin: 30px">

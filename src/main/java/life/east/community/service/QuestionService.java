@@ -159,7 +159,7 @@ public class QuestionService {
         }
     }
 
-    public void incView(Long id) {
+    public void incViewCount(Long id) {
         Question question = new Question();
         question.setId(id);
         //增加的阅读数为1

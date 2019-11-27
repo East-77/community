@@ -90,6 +90,10 @@ public class PublishController {
         question.setTag(tag);
         question.setCreator(user.getId());
         question.setId(id);
+        //数据库default值不生效？
+        question.setViewCount(0);
+        question.setCommentCount(0);
+        question.setLikeCount(0);
 
         questionService.createOrUpdate(question);
 

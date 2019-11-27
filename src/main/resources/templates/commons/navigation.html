@@ -21,7 +21,6 @@
                     <input type="text" class="form-control" placeholder="搜索问题">
                 </div>
                 <button type="submit" class="btn btn-default">搜索</button>
-                <button th:text="${session.test}" class="btn btn-default" th:if="${session.test}!=null"></button>
             </form>
             <ul class="nav navbar-nav navbar-right">
                 <li th:if="${session.user}!=null">

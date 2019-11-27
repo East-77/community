@@ -133,5 +133,12 @@ org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating
    
 ###2019.11.27
 
-#### `为解决问题：`
+#### `未解决问题：`
    优雅地给异常处理加上自适应效果（浏览器返回错误页面，客户端返回JSON数据。
+   
+####问题：
+   MyBatis Generator生成的selectByExample方法获取text类型数据得到的是空值
+   
+#####解决：
+   * 读取含text类型字段的数据时，应使用XXXWithBlobs的方法，否则会获取到空值；
+   * 修改字段数据类型了，改用varchar

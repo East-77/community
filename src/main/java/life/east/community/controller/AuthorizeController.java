@@ -66,7 +66,6 @@ public class AuthorizeController {
 
             //写入session、cookie
             request.getSession().setAttribute("user",user);
-            request.getSession().setAttribute("test","我没有消失");
             //数据库模拟cokie
             response.addCookie(new Cookie("token",token));
             return "redirect:/";

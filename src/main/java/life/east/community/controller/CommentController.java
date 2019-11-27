@@ -1,6 +1,6 @@
 package life.east.community.controller;
 
-import life.east.community.dto.CommentDTO;
+import life.east.community.dto.CommentCreateDTO;
 import life.east.community.dto.CommentResultDTO;
 import life.east.community.exception.CustomizeErrorCode;
 import life.east.community.model.Comment;
@@ -30,7 +30,7 @@ public class CommentController {
 
     @ResponseBody
     @RequestMapping(value = "/comment", method = RequestMethod.POST)
-    public Object comment(@RequestBody CommentDTO commentDTO,
+    public Object comment(@RequestBody CommentCreateDTO commentCreateDTO,
                           HttpServletRequest request) {
 
         User user = (User) request.getSession().getAttribute("user");
@@ -38,7 +38,7 @@ public class CommentController {
             return CommentResultDTO.errorOf(CustomizeErrorCode.NOT_LOGIN);
         }
         Comment comment = new Comment();
-        BeanUtils.copyProperties(commentDTO, comment);
+        BeanUtils.copyProperties(commentCreateDTO, comment);
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setGmtModified(comment.getGmtCreate());
         comment.setCommentator(user.getId());
