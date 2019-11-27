@@ -24,7 +24,7 @@ public class IndexController {
                         @RequestParam(name = "pageSize", defaultValue = "5") Integer pageSize,
                         Model model) {
 
-        PaginationDTO pagination = questionService.listQuestions(pageNumber, pageSize);
+        PaginationDTO pagination = questionService.listQuestionsByUserId(pageNumber, pageSize);
         model.addAttribute("pagination", pagination);
         return "index";
     }

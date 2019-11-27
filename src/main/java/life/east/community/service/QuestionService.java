@@ -4,6 +4,7 @@ import life.east.community.dto.PaginationDTO;
 import life.east.community.dto.QuestionDTO;
 import life.east.community.exception.CustomizeErrorCode;
 import life.east.community.exception.CustomizeException;
+import life.east.community.mapper.QuestionExtMapper;
 import life.east.community.mapper.QuestionMapper;
 import life.east.community.mapper.UserMapper;
 import life.east.community.model.Question;
@@ -31,7 +32,10 @@ public class QuestionService {
     @Autowired
     private QuestionMapper questionMapper;
 
-    public PaginationDTO listQuestions(Integer pageNumber, Integer pageSize) {
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
+
+    public PaginationDTO listQuestionsByUserId(Integer pageNumber, Integer pageSize) {
 
         //size*(page-1)
 
@@ -76,7 +80,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public PaginationDTO listQuestions(Integer userId, Integer pageNumber, Integer pageSize) {
+    public PaginationDTO listQuestionsByUserId(Long userId, Integer pageNumber, Integer pageSize) {
 //        Integer totalCountOfCreator = questionMapper.countOfCreator(userId);
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria().andCreatorEqualTo(userId);
@@ -120,7 +124,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public QuestionDTO findById(Integer id) {
+    public QuestionDTO findById(Long id) {
         Question question = questionMapper.selectByPrimaryKey(id);
         if(question == null){
             throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
@@ -153,5 +157,13 @@ public class QuestionService {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
         }
+    }
+
+    public void incView(Long id) {
+        Question question = new Question();
+        question.setId(id);
+        //增加的阅读数为1
+        question.setViewCount(1);
+        questionExtMapper.incViewCount(question);
     }
 }

@@ -41,7 +41,7 @@ public class MySessionInterceptor implements HandlerInterceptor {
                     List<User> users = userMapper.selectByExample(userExample);
                     if (users.size() != 0) {
                         request.getSession().setAttribute("user", users.get(0));
-                        return true;
+//                        return true;
                     }
                 }
             }
@@ -51,8 +51,8 @@ public class MySessionInterceptor implements HandlerInterceptor {
 //        request.setAttribute("error", "请先登录！");
 //        //跳转到首页
 //        System.out.println("跳转到首页");
-        request.getRequestDispatcher("/").forward(request, response);
-        return false;
+//        request.getRequestDispatcher("/").forward(request, response);
+        return true;
     }
 
     @Override

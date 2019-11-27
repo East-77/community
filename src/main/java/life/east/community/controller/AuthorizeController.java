@@ -3,7 +3,6 @@ package life.east.community.controller;
 import life.east.community.Provider.GithubProvider;
 import life.east.community.dto.AccessTokenDTO;
 import life.east.community.dto.GithubUserDTO;
-import life.east.community.mapper.UserMapper;
 import life.east.community.model.User;
 import life.east.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +36,6 @@ public class AuthorizeController {
     
     @Value("${github.redirect.uri}")
     private String redirectURI;
-    
-    @Autowired
-    private UserMapper userMapper;
 
     @Autowired
     private UserService userService;

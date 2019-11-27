@@ -91,3 +91,47 @@ mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
    每次重启登录态消失
    
  #####原因：拦截器没有拦截主页，所以没有添加登录态
+ 
+  #####`已解决`（2019.11.27）：
+   改变之前拦截器的错误定位与配置（MyWebConfig）。此拦截器（MySessionInterceptor）是为了通过利用cookie给已登录的用户恢复登录态，而不是为了拦截未登录的用户。
+ 
+####问题：
+  SQL不能‘+=’，报错：
+ ```sql
+update question set view_count += 1 where id = 1
+```
+>出现问题时切记应在刚刚修改的地方着手排查
+
+
+####问题：
+  IDEA突然出现以下错误：
+```text
+cannot resolve symbol ***
+```
+#####解决：
+   * 刷新单个类的缓存（把报错的类改个名，然后再改回来）
+   * 在Intellij idea下 file -->Invalidate Caches/Restart 清除缓存重启
+   
+####问题：
+
+   一直无法启动并提示以下错误：
+   ```text
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'userMapper' defined in file [W:\Idea-workspace\community\target\cla
+```
+
+#####解决：
+   一直没有找到问题所在，最后选择回退：Git --> Revert。暂时解决。
+   
+####问题：
+   Postman模拟请求时一直响应不正确
+
+#####分析：
+   配置的拦截器起了副作用
+ 
+#####解决：
+   暂时弃用拦截器，或者使用网页版的Postman（与localhost共用session跟cookie）
+   
+###2019.11.27
+
+#### `为解决问题：`
+   优雅地给异常处理加上自适应效果（浏览器返回错误页面，客户端返回JSON数据。
