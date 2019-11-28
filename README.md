@@ -142,3 +142,14 @@ org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating
 #####解决：
    * 读取含text类型字段的数据时，应使用XXXWithBlobs的方法，否则会获取到空值；
    * 修改字段数据类型了，改用varchar
+   
+###2019.11.28
+
+####问题1：  
+   intellij idea 部署的项目中 js、css文件修改后chrome浏览器不能及时更新
+   
+#####解决：
+   在调试页面中勾选Disable cache
+   
+   ![取消chrome浏览器缓存](https://img-blog.csdn.net/20180426105102677?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0FOaWdodEVhZ2xl/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70 "取消chrome浏览器缓存")
+   

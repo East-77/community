@@ -10,10 +10,11 @@ import lombok.Data;
  * @description 记录回复结果（成功或失败）
  */
 @Data
-public class CommentResultDTO {
+public class CommentResultDTO<T> {
     //自定义错误码
     private Integer code;
     private String message;
+    private T data;
 
     public static CommentResultDTO errorOf(Integer code,String message){
         CommentResultDTO commentResultDTO = new CommentResultDTO();
@@ -34,6 +35,14 @@ public class CommentResultDTO {
         CommentResultDTO commentResultDTO = new CommentResultDTO();
         commentResultDTO.setCode(200);
         commentResultDTO.setMessage("请求成功");
+        return commentResultDTO;
+    }
+
+    public static <T> CommentResultDTO okOf(T t){
+        CommentResultDTO commentResultDTO = new CommentResultDTO();
+        commentResultDTO.setCode(200);
+        commentResultDTO.setMessage("请求成功");
+        commentResultDTO.setData(t);
         return commentResultDTO;
     }
 }

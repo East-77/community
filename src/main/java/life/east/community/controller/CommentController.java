@@ -1,7 +1,10 @@
 package life.east.community.controller;
 
+import com.mysql.jdbc.StringUtils;
 import life.east.community.dto.CommentCreateDTO;
+import life.east.community.dto.CommentDTO;
 import life.east.community.dto.CommentResultDTO;
+import life.east.community.enums.CommentTypeEnum;
 import life.east.community.exception.CustomizeErrorCode;
 import life.east.community.model.Comment;
 import life.east.community.model.User;
@@ -9,12 +12,10 @@ import life.east.community.service.CommentService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author 7777777
@@ -28,6 +29,12 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
+    /**
+     * 获取问题的全部回复的请求
+     * @param commentCreateDTO
+     * @param request
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "/comment", method = RequestMethod.POST)
     public Object comment(@RequestBody CommentCreateDTO commentCreateDTO,
@@ -36,6 +43,9 @@ public class CommentController {
         User user = (User) request.getSession().getAttribute("user");
         if(user == null){
             return CommentResultDTO.errorOf(CustomizeErrorCode.NOT_LOGIN);
+        }
+        if(commentCreateDTO == null || StringUtils.isNullOrEmpty(commentCreateDTO.getContent())){
+            return CommentResultDTO.errorOf(CustomizeErrorCode.COMMENT_IS_EMPTY);
         }
         Comment comment = new Comment();
         BeanUtils.copyProperties(commentCreateDTO, comment);
@@ -47,5 +57,18 @@ public class CommentController {
         commentService.insert(comment);
 
         return CommentResultDTO.okOf();
+    }
+
+    /**
+     * 获取某评论的全部回复的请求
+     * @param id
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/comment/{id}", method = RequestMethod.GET)
+    public CommentResultDTO<List<CommentDTO>> comments(@PathVariable(name = "id") Long id){
+        List<CommentDTO> commentDTOS = commentService.listByTargetId(id, CommentTypeEnum.COMMENT);
+
+        return CommentResultDTO.okOf(commentDTOS);
     }
 }
