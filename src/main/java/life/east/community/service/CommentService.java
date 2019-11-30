@@ -2,12 +2,11 @@ package life.east.community.service;
 
 import life.east.community.dto.CommentDTO;
 import life.east.community.enums.CommentTypeEnum;
+import life.east.community.enums.NotificationStatusEnum;
+import life.east.community.enums.NotificationTypeEnum;
 import life.east.community.exception.CustomizeErrorCode;
 import life.east.community.exception.CustomizeException;
-import life.east.community.mapper.CommentMapper;
-import life.east.community.mapper.QuestionExtMapper;
-import life.east.community.mapper.QuestionMapper;
-import life.east.community.mapper.UserMapper;
+import life.east.community.mapper.*;
 import life.east.community.model.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +35,18 @@ public class CommentService {
 
     @Autowired
     private CommentMapper commentMapper;
-    
+
     @Autowired
     private UserMapper userMapper;
 
-    @Transactional
-    public void insert(Comment comment) {
+    @Autowired
+    private CommentExtMapper commentExtMapper;
+
+    @Autowired
+    private NotificationMapper notificationMapper;
+
+    @Transactional(rollbackFor = Exception.class)
+    public void insert(Comment comment, User commentator) {
         if (comment.getParentId() == null || comment.getParentId() == 0) {
             throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
         }
@@ -52,21 +57,59 @@ public class CommentService {
         if (comment.getType().equals(CommentTypeEnum.COMMENT.getType())) {
             //回复的是评论
             Comment dbComment = commentMapper.selectByPrimaryKey(comment.getParentId());
-            if (dbComment == null){
+            if (dbComment == null) {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
+
+            Question question = questionMapper.selectByPrimaryKey(dbComment.getParentId());
+            if (question == null) {
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
+
             commentMapper.insert(comment);
-        }else {
+            //评论数+1
+            dbComment.setCommentCount(1);
+            commentExtMapper.incCommentCount(dbComment);
+
+            //插入通知
+            createNotification(comment, dbComment.getCommentator(), commentator.getName(), question.getTitle(), NotificationTypeEnum.REPLY_COMMENT, question.getId());
+        } else {
             //回复问题
             Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
-            if (question == null){
+            if (question == null) {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
             commentMapper.insert(comment);
             //评论数累加1
             question.setCommentCount(1);
             questionExtMapper.incCommentCount(question);
+
+            //插入通知
+            createNotification(comment, question.getCreator(), commentator.getName(), question.getTitle(), NotificationTypeEnum.REPLY_QUESTION, question.getId());
         }
+    }
+
+    /**
+     * 插入通知
+     *
+     * @param comment
+     * @param receiver
+     * @param notifierName
+     * @param outerTitle
+     * @param notificationType
+     * @param outerid
+     */
+    private void createNotification(Comment comment, Long receiver, String notifierName, String outerTitle, NotificationTypeEnum notificationType, Long outerid) {
+        Notification notification = new Notification();
+        notification.setGmtCreate(System.currentTimeMillis());
+        notification.setNotifier(comment.getCommentator());
+        notification.setOuterid(outerid);
+        notification.setReceiver(receiver);
+        notification.setType(notificationType.getType());
+        notification.setNotifierName(notifierName);
+        notification.setOuterTitle(outerTitle);
+        notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
+        notificationMapper.insert(notification);
     }
 
     public List<CommentDTO> listByTargetId(Long id, CommentTypeEnum type) {
@@ -78,7 +121,7 @@ public class CommentService {
         commentExample.setOrderByClause("gmt_create desc");
         List<Comment> comments = commentMapper.selectByExampleWithBLOBs(commentExample);
 
-        if(comments.size() == 0){
+        if (comments.size() == 0) {
             return new ArrayList<>();
         }
         //通过流遍历所有评论拿到所有评论者的id（去除重复）
@@ -97,7 +140,7 @@ public class CommentService {
         //把所有的评论与它所属的评论者整合成commentDTO
         List<CommentDTO> commentDTOS = comments.stream().map(comment -> {
             CommentDTO commentDTO = new CommentDTO();
-            BeanUtils.copyProperties(comment,commentDTO);
+            BeanUtils.copyProperties(comment, commentDTO);
             commentDTO.setUser(userMap.get(comment.getCommentator()));
             return commentDTO;
         }).collect(Collectors.toList());

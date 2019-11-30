@@ -1,5 +1,6 @@
 package life.east.community.service;
 
+import com.mysql.jdbc.StringUtils;
 import life.east.community.dto.PaginationDTO;
 import life.east.community.dto.QuestionDTO;
 import life.east.community.exception.CustomizeErrorCode;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author 7777777
@@ -74,7 +76,7 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
-        paginationDTO.setQuestions(questionDTOList);
+        paginationDTO.setData(questionDTOList);
         //获取总记录数
 //        Integer totalCount = questionMapper.count();
         //根据分页大小等得到分页的相关信息
@@ -118,7 +120,7 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
-        paginationDTO.setQuestions(questionDTOList);
+        paginationDTO.setData(questionDTOList);
         //获取总记录数
 //        Integer totalCount = questionMapper.count();
         //根据分页大小等得到分页的相关信息
@@ -167,5 +169,27 @@ public class QuestionService {
         //增加的阅读数为1
         question.setViewCount(1);
         questionExtMapper.incViewCount(question);
+    }
+
+    public List<QuestionDTO> selectByTagRelated(QuestionDTO questionDTO) {
+        if(StringUtils.isNullOrEmpty(questionDTO.getTag())){
+            return new ArrayList<>();
+        }
+
+//        StringUtils.split(questionDTO.getTag(),",|,")
+
+//        String[] tags = questionDTO.getTag().split("\\|");
+        Question question = new Question();
+        question.setId(questionDTO.getId());
+        question.setTag(questionDTO.getTag());
+
+        List<Question> relatedQuestions = questionExtMapper.selectByTagRelated(question);
+        List<QuestionDTO> relatedQuestionDTOs = relatedQuestions.stream().map(reQuestion -> {
+            QuestionDTO reQuestionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(reQuestion,reQuestionDTO);
+            return reQuestionDTO;
+        }).collect(Collectors.toList());
+
+        return relatedQuestionDTOs;
     }
 }

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * @author 7777777
@@ -84,10 +86,14 @@ public class PublishController {
             return "publish";
         }
 
+        //固定tag格式
+        String[] splitTag = tag.split("[，,]");
+        String tags = Arrays.stream(splitTag).collect(Collectors.joining("|"));
+
         Question question = new Question();
         question.setTitle(title);
         question.setDescription(description);
-        question.setTag(tag);
+        question.setTag(tags);
         question.setCreator(user.getId());
         question.setId(id);
         //数据库default值不生效？

@@ -1,24 +1,31 @@
-body{
+body {
     background-color: #efefef;
 }
-.main{
+
+.main {
     background-color: white;
     margin: 30px;
 }
 
-#comment_section .btn-success{
+.list-data {
+    margin-top: 15px;
+    border-top: 1px solid #f5f5f5;
+}
+
+#comment_section .btn-success {
     margin-bottom: 15px;
     float: right;
 }
 
-.media-object{
+.media-object {
     width: 40px;
     height: 40px;
 }
 
-.media-body{
+.media-body {
     padding-top: 12px;
 }
+
 /*在index页面不起作用*/
 .text-desc {
     font-size: 12px;
@@ -26,52 +33,61 @@ body{
     color: #999;
 }
 
-.edit-menu{
+.edit-menu {
     color: #999;
-    font-size:13px
+    font-size: 13px;
 }
 
-.jumbotron{
+.jumbotron {
     margin: 80px;
 }
 
-.comment{
+.comment {
     margin: 15px 0;
 }
 
-.comment-menu{
+.comment-menu {
     color: #999999;
     margin-top: 5px;
 }
 
-.comment-menu .icon{
+.comment-menu .icon {
     margin-right: 5px;
     font-size: 16px;
     cursor: pointer;
 }
 
-.comment-menu .active{
+.comment-menu .comment-icon {
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.comment-menu .active {
     color: #499ef3;
 }
 
-.comment-menu .icon:hover{
+.comment-menu .icon:hover {
     color: #499ef3;
 }
 
-.comment-cut{
+.comment-menu .comment-icon:hover {
+    color: #499ef3;
+}
+
+.comment-cut {
     margin: 5px;
 }
 
-.comment-list{
+.comment-list {
     padding: 10px 20px;
     border-bottom: 1px solid #f5f5f5;
 }
 
-.commentViewer{
+.commentViewer {
     margin-top: 10px;
 }
 
-.comment-collapse{
+.comment-collapse {
     border-radius: 5px;
     position: relative;
     margin: 5px 0 15px;
@@ -79,22 +95,58 @@ body{
     background-color: #fff;
 }
 
-.sub-comment-list{
+.sub-comment-list {
     padding: 15px 0 0;
     border-bottom: 1px solid #f2f2f2;
     color: #666;
     font-size: 12px;
 }
 
-.comment-collapse .btn-success{
+.comment-collapse .btn-success {
     margin: 10px 0;
 }
 
-.sub-comment-action{
+.btn-success {
+    margin: 0 0 10px;
+}
+
+.sub-comment-action {
     margin-top: 25px;
     padding: 0;
 }
 
-#comment_section{
+#comment_section {
     margin-top: 15px;
+}
+
+.topic-tag {
+    display: inline-block;
+    height: 20px;
+    line-height: 16px;
+    padding: 2px 5px;
+    background-color: #99cfff;
+    font-size: 12px;
+    color: #fff;
+    border-radius: 4px;
+}
+
+.reQuestions {
+    list-style: none;
+    font-size: 14px;
+    padding-left: 0;
+}
+
+.reQuestions a {
+    cursor: pointer;
+    color: #155faa;
+    padding: 8px;
+    text-decoration: none;
+}
+
+.left-hr {
+    margin-bottom: 0;
+}
+
+.question-recommend {
+    width: 100%;
 }

@@ -12,6 +12,8 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode{
     TYPE_PARAM_WRONG(2004,"此问题或评论已飘到外太空，换个试试？"),
     COMMENT_NOT_FOUND(2005,"该评论已飘到外太空，换个试试？"),
     COMMENT_IS_EMPTY(2006,"评论内容不能为空！"),
+    READ_NOTIFICATION_FAIL(2007,"大哥,你搞错对象了"),
+    NOTIFICATION_NOT_FOUND(2008,"这个通知飘了，换个试试?"),
     NOT_LOGIN(3001,"你飘了~请先登录再重试");
 
     @Override

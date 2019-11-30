@@ -3,6 +3,7 @@ package life.east.community.interceptor;
 import life.east.community.mapper.UserMapper;
 import life.east.community.model.User;
 import life.east.community.model.UserExample;
+import life.east.community.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -24,6 +25,9 @@ public class MySessionInterceptor implements HandlerInterceptor {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private NotificationService notificationService;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
@@ -41,17 +45,12 @@ public class MySessionInterceptor implements HandlerInterceptor {
                     List<User> users = userMapper.selectByExample(userExample);
                     if (users.size() != 0) {
                         request.getSession().setAttribute("user", users.get(0));
-//                        return true;
+                        Long unReadNotifies = notificationService.unReadNotifyCount(users.get(0).getId());
+                        request.getSession().setAttribute("unReadNotifies",unReadNotifies);
                     }
                 }
             }
         }
-
-        //未登录用户只能发起浏览请求不能发起其他请求
-//        request.setAttribute("error", "请先登录！");
-//        //跳转到首页
-//        System.out.println("跳转到首页");
-//        request.getRequestDispatcher("/").forward(request, response);
         return true;
     }
 

@@ -31,11 +31,15 @@ public class QuestionController {
     public String question(@PathVariable(name = "id") Long id,
                            Model model){
         QuestionDTO questionDTO = questionService.findById(id);
+        //获取评论
         List<CommentDTO> commentDTOS = commentService.listByTargetId(id, CommentTypeEnum.QUESTION);
+        //根据标签获取相关问题
+        List<QuestionDTO> relatedQuestions = questionService.selectByTagRelated(questionDTO);
         //阅读数累加
         questionService.incViewCount(id);
         model.addAttribute("question",questionDTO);
         model.addAttribute("commentDTOS",commentDTOS);
+        model.addAttribute("relatedQuestions",relatedQuestions);
         return "question";
     }
 }
